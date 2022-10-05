@@ -2,9 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
+const recipeRoutes = require('./src/routes/recipe.route');
+
 const app = express();
 
 app.use(cors());
+
+app.use(express.json());
 
 app.get('/', (_, res) => {
   res.json(
@@ -14,6 +18,8 @@ app.get('/', (_, res) => {
     }
   );
 });
+
+app.use('/recipes', recipeRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
