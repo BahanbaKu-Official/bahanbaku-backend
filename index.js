@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const recipeRoutes = require('./src/routes/recipe.route');
 const ingredientRoutes = require('./src/routes/ingredient.route');
+const tagRoutes = require('./src/routes/tag.route');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.get('/', (_, res) => {
 
 app.use('/recipes', recipeRoutes);
 app.use('/ingredients', ingredientRoutes);
+app.use('/tags', tagRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

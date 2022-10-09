@@ -7,4 +7,6 @@ router.get('/:recipeId', recipe.getRecipeById);
 
 router.post('/', recipe.createRecipe);
 
+router.put('/:recipeId', recipe.addTag);
+
 module.exports = router;

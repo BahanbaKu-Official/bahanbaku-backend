@@ -16,6 +16,9 @@ const sequelize = new Sequelize(env.DEV_DB_NAME, env.DEV_DB_USER, env.DEV_DB_PAS
 
 const recipe = require('./recipe.model')(sequelize, Sequelize);
 const ingredient = require('./ingredient.model')(sequelize, Sequelize);
+const tag = require('./tag.model')(sequelize, Sequelize);
+
+const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 
 recipe.hasMany(ingredient, {
   foreignKey: 'recipeId',
@@ -26,9 +29,21 @@ ingredient.belongsTo(recipe, {
   as: 'recipe',
 })
 
+recipe.belongsToMany(tag, {
+  through: recipe_tag,
+  as: 'tags',
+  foreignKey: 'recipeId',
+});
+tag.belongsToMany(recipe, {
+  through: recipe_tag,
+  as: 'recipes',
+  foreignKey: 'tagId',
+})
+
 module.exports = {
   Sequelize,
   sequelize,
   recipe,
   ingredient,
+  tag,
 }

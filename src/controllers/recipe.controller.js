@@ -1,5 +1,6 @@
 const db = require('../models');
 const Recipe = db.recipe;
+const Tag = db.tag;
 const nanoid = require('../config/nanoid.config');
 
 const getRecipes = async (_, res, next) => {
@@ -21,7 +22,7 @@ const getRecipeById = async (req, res, next) => {
 
   try {
     const recipe = await Recipe.findByPk(recipeId, {
-      include: 'ingredients'
+      include: ['ingredients', 'tags']
     });
     
     return res.status(200).json({
@@ -55,8 +56,28 @@ const createRecipe = async (req, res, next) => {
   }
 }
 
+const addTag = async (req, res, next) => {
+  const { recipeId } = req.params;
+  const { tagId } = req.query;
+
+  try {
+    const recipe = await Recipe.findByPk(recipeId);
+    const tag = await Tag.findByPk(tagId);
+
+    tag.addRecipe(recipe);
+
+    return res.status(200).json({
+      success: true,
+      message: 'recipe added to tag',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getRecipes,
   getRecipeById,
   createRecipe,
+  addTag,
 }
