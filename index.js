@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 
 const recipeRoutes = require('./src/routes/recipe.route');
+const ingredientRoutes = require('./src/routes/ingredient.route');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.get('/', (_, res) => {
 });
 
 app.use('/recipes', recipeRoutes);
+app.use('/ingredients', ingredientRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

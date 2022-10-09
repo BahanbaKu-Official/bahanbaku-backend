@@ -16,6 +16,24 @@ const getRecipes = async (_, res, next) => {
   }
 }
 
+const getRecipeById = async (req, res, next) => {
+  const { recipeId } = req.params;
+
+  try {
+    const recipe = await Recipe.findByPk(recipeId, {
+      include: 'ingredients'
+    });
+    
+    return res.status(200).json({
+      success: true,
+      message: 'one recipe grabbed',
+      results: recipe,
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 const createRecipe = async (req, res, next) => {
   const recipeId = nanoid();
 
@@ -39,5 +57,6 @@ const createRecipe = async (req, res, next) => {
 
 module.exports = {
   getRecipes,
+  getRecipeById,
   createRecipe,
 }
