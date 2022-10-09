@@ -12,7 +12,10 @@ module.exports = (sequelize, Sequelize) => {
     },
     updatedAt: {
       type: Sequelize.DATE
-    }
+    },
+    deletedAt: {
+      type: Sequelize.DATE,
+    },
   });
   return tag;
 }
