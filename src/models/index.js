@@ -17,6 +17,7 @@ const sequelize = new Sequelize(env.DEV_DB_NAME, env.DEV_DB_USER, env.DEV_DB_PAS
 const recipe = require('./recipe.model')(sequelize, Sequelize);
 const ingredient = require('./ingredient.model')(sequelize, Sequelize);
 const tag = require('./tag.model')(sequelize, Sequelize);
+const user = require('./user.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 
@@ -46,4 +47,5 @@ module.exports = {
   recipe,
   ingredient,
   tag,
+  user,
 }
