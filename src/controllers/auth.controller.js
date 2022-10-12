@@ -18,6 +18,7 @@ const login = async (req, res, next) => {
     if (!isValid) return next('403,wrong password')
     
     const payload = {
+      userId: user.userId,
       username: user.username,
       role: user.role,
     }

@@ -22,7 +22,26 @@ const getRecipeById = async (req, res, next) => {
 
   try {
     const recipe = await Recipe.findByPk(recipeId, {
-      include: ['ingredients', 'tags']
+      include: [
+        {
+          model: db.ingredient,
+          as: 'ingredients'
+        },
+        {
+          model: db.review,
+          as: 'reviews',
+          include: [
+            {
+              model: db.user,
+              as: 'user'
+            }
+          ]
+        },
+        {
+          model: db.tag,
+          as: 'tags'
+        },
+      ],
     });
     
     return res.status(200).json({

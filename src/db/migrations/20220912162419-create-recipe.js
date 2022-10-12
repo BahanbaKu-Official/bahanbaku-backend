@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING(1000),
       },
       rating: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DOUBLE,
       },
       portion: {
         type: Sequelize.INTEGER,

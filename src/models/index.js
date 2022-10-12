@@ -18,6 +18,7 @@ const recipe = require('./recipe.model')(sequelize, Sequelize);
 const ingredient = require('./ingredient.model')(sequelize, Sequelize);
 const tag = require('./tag.model')(sequelize, Sequelize);
 const user = require('./user.model')(sequelize, Sequelize);
+const review = require('./review.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 
@@ -41,6 +42,28 @@ tag.belongsToMany(recipe, {
   foreignKey: 'tagId',
 })
 
+recipe.hasMany(review, {
+  foreignKey: 'recipeId',
+  as: 'reviews',
+});
+recipe.hasMany(review, {
+  foreignKey: 'recipeId',
+  as: 'reviewAvg',
+});
+review.belongsTo(recipe, {
+  foreignKey: 'recipeId',
+  as: 'recipe',
+})
+
+user.hasMany(review, {
+  foreignKey: 'userId',
+  as: 'reviews',
+});
+review.belongsTo(user, {
+  foreignKey: 'userId',
+  as: 'user',
+})
+
 module.exports = {
   Sequelize,
   sequelize,
@@ -48,4 +71,5 @@ module.exports = {
   ingredient,
   tag,
   user,
+  review,
 }
