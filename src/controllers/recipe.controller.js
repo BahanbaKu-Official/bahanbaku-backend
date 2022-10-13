@@ -3,9 +3,26 @@ const Recipe = db.recipe;
 const Tag = db.tag;
 const nanoid = require('../config/nanoid.config');
 
-const getRecipes = async (_, res, next) => {
+const getRecipes = async (req, res, next) => {
+  const { newest, top} = req.query;
+  let options;
+
+  if (newest) {
+    options = {
+      order: [
+        ['createdAt', 'DESC']
+      ]
+    }
+  } else if (top) {
+    options = {
+      order: [
+        ['rating', 'DESC']
+      ]
+    }
+  }
+
   try {
-    const recipes = await Recipe.findAll();
+    const recipes = await Recipe.findAll(options);
     
     return res.status(200).json({
       success: true,
