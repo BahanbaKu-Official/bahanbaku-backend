@@ -11,7 +11,8 @@ const sequelize = new Sequelize(env.DEV_DB_NAME, env.DEV_DB_USER, env.DEV_DB_PAS
     min: 0,
     acquire: env.DB_ACQUIRE_POOL,
     idle: env.DB_IDLE_POOL
-  }
+  },
+  dialectOptions: { decimalNumbers: true }
 });
 
 const recipe = require('./recipe.model')(sequelize, Sequelize);
@@ -20,8 +21,10 @@ const tag = require('./tag.model')(sequelize, Sequelize);
 const user = require('./user.model')(sequelize, Sequelize);
 const review = require('./review.model')(sequelize, Sequelize);
 const product = require('./product.model')(sequelize, Sequelize);
+const transaction = require('./transaction.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
+const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
 
 recipe.hasMany(ingredient, {
   foreignKey: 'recipeId',
@@ -74,6 +77,26 @@ ingredient.belongsTo(product, {
   as: 'products',
 })
 
+transaction.belongsToMany(product, {
+  through: product_transaction,
+  as: 'products',
+  foreignKey: 'transactionId',
+});
+product.belongsToMany(transaction, {
+  through: product_transaction,
+  as: 'transactions',
+  foreignKey: 'productId',
+})
+
+recipe.hasMany(transaction, {
+  foreignKey: 'recipeId',
+  as: 'transactions',
+})
+transaction.belongsTo(recipe, {
+  foreignKey: 'recipeId',
+  as: 'recipe'
+})
+
 module.exports = {
   Sequelize,
   sequelize,
@@ -83,4 +106,5 @@ module.exports = {
   user,
   review,
   product,
+  transaction,
 }
