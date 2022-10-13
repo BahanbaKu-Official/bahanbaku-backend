@@ -22,6 +22,7 @@ const user = require('./user.model')(sequelize, Sequelize);
 const review = require('./review.model')(sequelize, Sequelize);
 const product = require('./product.model')(sequelize, Sequelize);
 const transaction = require('./transaction.model')(sequelize, Sequelize);
+const step = require('./step.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
@@ -97,6 +98,24 @@ transaction.belongsTo(recipe, {
   as: 'recipe'
 })
 
+step.hasMany(ingredient, {
+  foreignKey: 'stepId',
+  as: 'ingredients'
+})
+ingredient.belongsTo(step, {
+  foreignKey: 'stepId',
+  as: 'step',
+})
+
+recipe.hasMany(step, {
+  foreignKey: 'recipeId',
+  as: 'steps',
+})
+step.belongsTo(recipe, {
+  foreignKey: 'recipeId',
+  as: 'recipe'
+})
+
 module.exports = {
   Sequelize,
   sequelize,
@@ -107,4 +126,5 @@ module.exports = {
   review,
   product,
   transaction,
+  step,
 }

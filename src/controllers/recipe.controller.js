@@ -64,6 +64,16 @@ const getRecipeById = async (req, res, next) => {
           model: db.tag,
           as: 'tags'
         },
+        {
+          model: db.step,
+          as: 'steps',
+          include: [
+            {
+              model: db.ingredient,
+              as: 'ingredients'
+            }
+          ]
+        },
       ],
     });
     

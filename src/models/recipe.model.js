@@ -25,9 +25,6 @@ module.exports = (sequelize, Sequelize) => {
     time: {
       type: Sequelize.INTEGER,
     },
-    steps: {
-      type: Sequelize.TEXT,
-    },
     createdAt: {
       type: Sequelize.DATE
     },
