@@ -7,6 +7,7 @@ const ingredientRoutes = require('./src/routes/ingredient.route');
 const tagRoutes = require('./src/routes/tag.route');
 const authRoutes = require('./src/routes/auth.route');
 const reviewRoutes = require('./src/routes/review.route');
+const productRoutes = require('./src/routes/product.route');
 
 const errorHandler = require('./src/utils/errorHandler');
 
@@ -30,6 +31,7 @@ app.use('/recipes', recipeRoutes);
 app.use('/ingredients', ingredientRoutes);
 app.use('/tags', tagRoutes);
 app.use('/review', reviewRoutes);
+app.use('/admin/products', productRoutes);
 
 app.use(errorHandler)
 

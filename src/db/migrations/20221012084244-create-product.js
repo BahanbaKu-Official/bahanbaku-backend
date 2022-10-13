@@ -2,39 +2,33 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('ingredients', {
-      ingredientId: {
+    await queryInterface.createTable('products', {
+      productId: {
         type: Sequelize.STRING(16),
         primaryKey: true,
       },
-      ingredient: {
+      name: {
         type: Sequelize.STRING,
       },
-      unit: {
-        type: Sequelize.TEXT,
+      stock: {
+        type: Sequelize.INTEGER,
       },
-      amount: {
+      price: {
         type: Sequelize.DECIMAL,
-      },
-      imageUrl: {
-        type: Sequelize.STRING(1000),
-      },
-      recipeId: {
-        type: Sequelize.STRING(16),
-      },
-      productId: {
-        type: Sequelize.STRING(16),
       },
       createdAt: {
         type: Sequelize.DATE
       },
       updatedAt: {
         type: Sequelize.DATE
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
       }
     });
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('ingredients');
+    await queryInterface.dropTable('products');
   }
 };

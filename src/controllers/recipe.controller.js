@@ -42,7 +42,13 @@ const getRecipeById = async (req, res, next) => {
       include: [
         {
           model: db.ingredient,
-          as: 'ingredients'
+          as: 'ingredients',
+          include: [
+            {
+              model: db.product,
+              as: 'products'
+            }
+          ]
         },
         {
           model: db.review,
