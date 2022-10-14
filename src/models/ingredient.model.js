@@ -22,6 +22,9 @@ module.exports = (sequelize, Sequelize) => {
       productId: {
         type: Sequelize.STRING(16),
       },
+      stepId: {
+        type: Sequelize.STRING(16),
+      },
       createdAt: {
         type: Sequelize.DATE
       },
