@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true,
     },
     step: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(1000),
     },
     sequence: {
       type: Sequelize.INTEGER,
