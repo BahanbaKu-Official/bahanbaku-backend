@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const recipe = sequelize.define('ingredients', {
+  const ingredient = sequelize.define('ingredients', {
       ingredientId: {
         type: Sequelize.STRING(16),
         primaryKey: true,
@@ -32,5 +32,5 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.DATE
       }
     });
-  return recipe;
+  return ingredient;
 }
