@@ -75,6 +75,9 @@ const getRecipeById = async (req, res, next) => {
           ]
         },
       ],
+      order: [
+        [db.step, 'sequence'],
+      ]
     });
     
     return res.status(200).json({
