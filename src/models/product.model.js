@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
     },
     price: {
-      type: Sequelize.DECIMAL,
+      type: Sequelize.INTEGER,
     },
     createdAt: {
       type: Sequelize.DATE

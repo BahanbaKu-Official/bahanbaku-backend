@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       rating: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.INTEGER,
       },
       userId: {
         type: Sequelize.STRING(16),

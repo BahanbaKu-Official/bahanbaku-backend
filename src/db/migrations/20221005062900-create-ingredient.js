@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       amount: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DOUBLE,
       },
       imageUrl: {
         type: Sequelize.STRING(1000),
