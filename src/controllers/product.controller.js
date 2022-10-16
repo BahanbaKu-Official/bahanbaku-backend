@@ -37,7 +37,28 @@ const createProduct = async (req, res, next) => {
   }
 }
 
+const getProductByName = async (req, res, next) => {
+  const { name } = req.query;
+
+  try {
+    const product = await Product.findAll({
+      where: {
+        name: db.sequelize.where(db.sequelize.fn('LOWER', db.sequelize.col('name')), 'LIKE', `%${name}%`),
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'one product grabbed by name',
+      results: product,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   getProducts,
   createProduct,
+  getProductByName,
 }

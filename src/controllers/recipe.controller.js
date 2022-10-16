@@ -130,9 +130,30 @@ const addTag = async (req, res, next) => {
   }
 }
 
+const getRecipeByTitle = async (req, res, next) => {
+  const { title } = req.query;
+
+  try {
+    const recipe = await Recipe.findAll({
+      where: {
+        title: db.sequelize.where(db.sequelize.fn('LOWER', db.sequelize.col('title')), 'LIKE', `%${title}`),
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'one recipe grabbed by title',
+      results: recipe,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   getRecipes,
   getRecipeById,
+  getRecipeByTitle,
   createRecipe,
   addTag,
 }

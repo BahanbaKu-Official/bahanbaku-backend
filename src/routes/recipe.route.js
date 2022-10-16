@@ -3,7 +3,10 @@ const router = require('express').Router();
 
 router.get('/', recipe.getRecipes);
 
+router.get('/search', recipe.getRecipeByTitle);
+
 router.get('/:recipeId', recipe.getRecipeById);
+
 
 router.post('/', recipe.createRecipe);
 
