@@ -17,7 +17,7 @@ const getTags = async (_, res, next) => {
 }
 
 const createTag = async (req, res, next) => {
-  const tagId = nanoid();
+  const tagId = `TAG${nanoid()}`;
 
   try {
     const tag = await Tag.create({

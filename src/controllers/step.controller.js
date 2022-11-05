@@ -17,7 +17,7 @@ const getSteps = async (_, res, next) => {
 }
 
 const createStep = async (req, res, next) => {
-  const stepId = nanoid();
+  const stepId = `STP${nanoid()}`;
   const { recipeId } = req.params;
 
   try {
