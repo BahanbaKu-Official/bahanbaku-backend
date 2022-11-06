@@ -2,6 +2,9 @@ const db = require('../models');
 const Transaction = db.transaction;
 const Product = db.product;
 const nanoid = require('../config/nanoid.config');
+const { chargeTransaction } = require('../utils/midtrans/chargeTransaction');
+const generateMidtransObj = require('../utils/midtrans/generateMidtransObj');
+const vaParser = require('../utils/midtrans/vaParser');
 
 const getTransactions = async (_, res, next) => {
   try {
@@ -21,8 +24,9 @@ const createTransaction = async (req, res, next) => {
   const transactionId = `TRC${nanoid()}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products } = req.body;
+  const { products, paymentMethod, customerData } = req.body;
   let total = 0;
+  const itemDetails = [];
 
   try {
     const transaction = await Transaction.create({
@@ -30,20 +34,36 @@ const createTransaction = async (req, res, next) => {
       transactionId,
       userId,
       recipeId,
-      status: 'diproses',
+      status: 'unpaid',
+      paymentMethod,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
 
-    for (let index = 0; index < products.length; index++) {
-      const product = await Product.findByPk(products[index]);
+    for (let i = 0; i < products.length; i++) {
+      const product = await Product.findByPk(products[i].id);
       transaction.addProduct(product);
-      await product.decrement({ stock: 1 });
-      total = (total + product.price);
+      total = (total + product.price * products[i].quantity);
+      itemDetails.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: products[i].quantity,
+      })
     }
 
+    const midtrans = generateMidtransObj(paymentMethod, transactionId, total, itemDetails, customerData);
+    const charge = await chargeTransaction(midtrans);
+
+    const va = vaParser(paymentMethod,charge);
+
     await Transaction.update({
-      total
+      total,
+      midtransId: charge.transaction_id,
+      gopayId: charge.actions ? charge.actions[1].url.split('=')[1] : null,
+      va,
+      billKey: charge.bill_key || null,
+      billerCode: charge.biller_code || null,
     }, {
       where: {
         transactionId,
@@ -53,9 +73,10 @@ const createTransaction = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'new transaction created',
-      results: transaction,
+      results: charge,
     })
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
@@ -90,8 +111,27 @@ const getTransactionsByUser = async (req, res, next) => {
   }
 }
 
+const confirmTransaction = async () => {
+  const {
+    order_id: transactionId,
+    transaction_status,
+  } = req.body;
+
+  const status = transaction_status == 'settlement' ? 'paid' : 'unpaid';
+
+  await Transaction.update({
+    total,
+    status,
+  }, {
+    where: {
+      transactionId,
+    }
+  })
+}
+
 module.exports = {
   getTransactions,
   createTransaction,
   getTransactionsByUser,
+  confirmTransaction,
 }
