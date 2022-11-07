@@ -4,8 +4,9 @@ const jwtMiddleware = require('../middlewares/jwtAuth');
 
 router.get('/', jwtMiddleware, transaction.getTransactionsByUser);
 
+router.post('/confirm', transaction.confirmTransaction);
+
 router.post('/:recipeId', jwtMiddleware, transaction.createTransaction);
 
-router.post('/confirm', transaction.confirmTransaction);
 
 module.exports = router;

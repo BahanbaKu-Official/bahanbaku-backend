@@ -76,7 +76,6 @@ const createTransaction = async (req, res, next) => {
       results: charge,
     })
   } catch (error) {
-    console.log(error);
     next(error);
   }
 }
@@ -111,7 +110,7 @@ const getTransactionsByUser = async (req, res, next) => {
   }
 }
 
-const confirmTransaction = async () => {
+const confirmTransaction = async (req, res, next) => {
   const {
     order_id: transactionId,
     transaction_status,
@@ -119,14 +118,24 @@ const confirmTransaction = async () => {
 
   const status = transaction_status == 'settlement' ? 'paid' : 'unpaid';
 
-  await Transaction.update({
-    total,
-    status,
-  }, {
-    where: {
-      transactionId,
-    }
-  })
+  try {
+    const transaction = await Transaction.update({
+      total,
+      status,
+    }, {
+      where: {
+        transactionId,
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'transaction status updated',
+      results: transaction,
+    })
+  } catch (error) {
+    next(error);
+  }
 }
 
 module.exports = {
