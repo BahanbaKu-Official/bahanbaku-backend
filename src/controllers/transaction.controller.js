@@ -112,19 +112,22 @@ const getTransactionsByUser = async (req, res, next) => {
 
 const confirmTransaction = async (req, res, next) => {
   const {
-    order_id: transactionId,
+    order_id,
     transaction_status,
   } = req.body;
 
-  const status = transaction_status == 'settlement' ? 'paid' : 'unpaid';
+  const status = (() => {
+    if (transaction_status == 'settlement') return 'paid';
+    if (transaction_status == 'expired') return 'expired';
+    return 'unpaid';
+  })();
 
   try {
     const transaction = await Transaction.update({
-      total,
       status,
     }, {
       where: {
-        transactionId,
+        transactionId: order_id,
       }
     })
 
