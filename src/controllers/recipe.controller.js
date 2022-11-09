@@ -138,7 +138,7 @@ const getRecipeByTitle = async (req, res, next) => {
     const recipe = await Recipe.findAll({
       where: {
         title: {
-          [Op.startsWith]: title,
+          [Op.substring]: title,
         }
       }
     })
