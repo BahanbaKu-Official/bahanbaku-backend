@@ -1,4 +1,4 @@
-const gopayHandler = (orderId, total, itemDetails, customerData) => {
+const gopayHandler = (orderId, total, itemDetails, customerDetails) => {
   return {
     "payment_type": "gopay",
     "transaction_details": {
@@ -6,7 +6,7 @@ const gopayHandler = (orderId, total, itemDetails, customerData) => {
       "gross_amount": total,
     },
     "item_details": itemDetails,
-    "customer_details":customerData,
+    "customer_details":customerDetails,
   }
 }
 

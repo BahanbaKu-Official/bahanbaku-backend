@@ -1,6 +1,6 @@
 const { recipientName } = require("../../config/midtrans.config");
 
-const otherBankHandler = (bankName, orderId, total, itemDetails, customerData) => {
+const otherBankHandler = (bankName, orderId, total, itemDetails, customerDetails) => {
   return {
     "payment_type": "bank_transfer",
     "bank_transfer": {
@@ -14,7 +14,7 @@ const otherBankHandler = (bankName, orderId, total, itemDetails, customerData) =
       "gross_amount": total,
     },
     "item_details": itemDetails,
-    "customer_details":customerData
+    "customer_details":customerDetails
   }
 }
 

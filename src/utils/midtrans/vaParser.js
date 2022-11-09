@@ -3,7 +3,7 @@ const vaParser = (bankName, charge) => {
     return charge.permata_va_number;
   }
   
-  if (bankName == 'gopay') {
+  if (['mandiri','gopay'].includes(bankName)) {
     return null;
   }
 

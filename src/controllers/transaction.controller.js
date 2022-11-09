@@ -24,7 +24,7 @@ const createTransaction = async (req, res, next) => {
   const transactionId = `TRC${nanoid()}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products, paymentMethod, customerData } = req.body;
+  const { products, paymentMethod, customerDetails } = req.body;
   let total = 0;
   const itemDetails = [];
 
@@ -52,7 +52,7 @@ const createTransaction = async (req, res, next) => {
       })
     }
 
-    const midtrans = generateMidtransObj(paymentMethod, transactionId, total, itemDetails, customerData);
+    const midtrans = generateMidtransObj(paymentMethod, transactionId, total, itemDetails, customerDetails);
     const charge = await chargeTransaction(midtrans);
 
     const va = vaParser(paymentMethod,charge);
@@ -73,7 +73,13 @@ const createTransaction = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'new transaction created',
-      results: charge,
+      results: {
+        paymentMethod,
+        gopayId: charge.actions ? charge.actions[1].url.split('=')[1] : null,
+        va,
+        billKey: charge.bill_key || null,
+        billerCode: charge.biller_code || null,
+      },
     })
   } catch (error) {
     next(error);
