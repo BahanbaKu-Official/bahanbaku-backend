@@ -2,6 +2,7 @@ const db = require('../models');
 const Recipe = db.recipe;
 const Tag = db.tag;
 const nanoid = require('../config/nanoid.config');
+const { Op } = require('sequelize');
 
 const getRecipes = async (req, res, next) => {
   const { newest, top} = req.query;
@@ -136,7 +137,9 @@ const getRecipeByTitle = async (req, res, next) => {
   try {
     const recipe = await Recipe.findAll({
       where: {
-        title: db.sequelize.where(db.sequelize.fn('LOWER', db.sequelize.col('title')), 'LIKE', `%${title}`),
+        title: {
+          [Op.startsWith]: title,
+        }
       }
     })
 
