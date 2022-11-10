@@ -5,11 +5,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     const user = await User.findOne({
-      where: { username },
+      where: { email },
     });
 
     if (!user) return next('404,user not listed');
@@ -35,7 +35,7 @@ const login = async (req, res, next) => {
 }
 
 const register = async (req, res, next) => {
-  const userId = nanoid();
+  const userId = `USR${nanoid()}`;
   const password = bcrypt.hashSync(req.body.password);
 
   try {
@@ -48,6 +48,7 @@ const register = async (req, res, next) => {
       updatedAt: new Date().toISOString(),
       isVerified: 0,
       role: 'user',
+      profileImage: 'https://storage.googleapis.com/bahanbaku-assets/user/blank-profile-picture.png',
       emailVerificationToken: null,
     });
 
