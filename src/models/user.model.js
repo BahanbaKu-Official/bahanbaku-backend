@@ -4,7 +4,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING(16),
       primaryKey: true,
     },
-    username: {
+    firstName: {
+      type: Sequelize.STRING,
+    },
+    lastName: {
       type: Sequelize.STRING,
     },
     phoneNumber: {
