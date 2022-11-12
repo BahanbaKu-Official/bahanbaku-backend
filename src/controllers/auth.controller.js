@@ -69,7 +69,38 @@ const register = async (req, res, next) => {
   }
 }
 
+const verify = async (req, res, next) => {
+  const { token } = req.query;
+
+  if (!token) return next('400,token not found');
+
+  try {
+
+    const user = await User.findOne({      
+      where: {
+        emailVerificationToken: token,
+      }
+    })
+    
+    if (!user) return next('403,token is invalid');
+
+    isVerified = 1;
+    const updateUser = await User.update({
+      isVerified,
+    }, {
+      where: {
+        emailVerificationToken: token,
+      }
+    })    
+
+    return res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
+  verify
 }
