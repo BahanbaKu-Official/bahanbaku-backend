@@ -3,6 +3,8 @@ const User = db.user;
 const nanoid = require('../config/nanoid.config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const emailVerificationHandler = require('../utils/email/generateVerificationEmail');
+const sendEmail = require('../utils/email/sendEmail');
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -37,6 +39,8 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   const userId = `USR${nanoid()}`;
   const password = bcrypt.hashSync(req.body.password);
+  const { email } = req.body;
+  const emailToken = `${nanoid()}-${nanoid()}`;
 
   try {
     const user = await User.create({
@@ -49,8 +53,11 @@ const register = async (req, res, next) => {
       isVerified: 0,
       role: 'user',
       profileImage: 'https://storage.googleapis.com/bahanbaku-assets/user/blank-profile-picture.png',
-      emailVerificationToken: null,
+      emailVerificationToken: emailToken,
     });
+
+    const verificationEmail = emailVerificationHandler(email,emailToken);
+    const sendVerification = await sendEmail(verificationEmail);
 
     return res.status(200).json({
       success: true,
@@ -62,7 +69,38 @@ const register = async (req, res, next) => {
   }
 }
 
+const verify = async (req, res, next) => {
+  const { token } = req.query;
+
+  if (!token) return next('400,token not found');
+
+  try {
+
+    const user = await User.findOne({      
+      where: {
+        emailVerificationToken: token,
+      }
+    })
+    
+    if (!user) return next('403,token is invalid');
+
+    isVerified = 1;
+    const updateUser = await User.update({
+      isVerified,
+    }, {
+      where: {
+        emailVerificationToken: token,
+      }
+    })    
+
+    return res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
+  verify
 }
