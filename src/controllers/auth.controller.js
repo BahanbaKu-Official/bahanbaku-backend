@@ -7,25 +7,30 @@ const emailVerificationHandler = require('../utils/email/generateVerificationEma
 const sendEmail = require('../utils/email/sendEmail');
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    email,
+    password
+  } = req.body;
 
   try {
     const user = await User.findOne({
-      where: { email },
+      where: {
+        email
+      },
     });
 
     if (!user) return next('404,user not listed');
 
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) return next('403,wrong password')
-    
+
     const payload = {
       userId: user.userId,
       username: user.username,
       role: user.role,
     }
     const token = jwt.sign(payload, process.env.JWT_TOKEN);
-    
+
     return res.status(200).json({
       success: true,
       message: 'successfully logged in',
@@ -39,10 +44,20 @@ const login = async (req, res, next) => {
 const register = async (req, res, next) => {
   const userId = `USR${nanoid()}`;
   const password = bcrypt.hashSync(req.body.password);
-  const { email } = req.body;
+  const {
+    email
+  } = req.body;
   const emailToken = `${nanoid()}-${nanoid()}`;
 
   try {
+    const checkExist = await User.findOne({
+      where: {
+        email
+      }
+    })
+
+    if (checkExist) return next('403,User already exist');
+
     const user = await User.create({
       ...req.body,
       userId,
@@ -56,8 +71,8 @@ const register = async (req, res, next) => {
       emailVerificationToken: emailToken,
     });
 
-    const verificationEmail = emailVerificationHandler(email,emailToken);
-    const sendVerification = await sendEmail(verificationEmail);
+    const verificationEmail = emailVerificationHandler(email, emailToken);
+    await sendEmail(verificationEmail);
 
     return res.status(200).json({
       success: true,
@@ -70,18 +85,20 @@ const register = async (req, res, next) => {
 }
 
 const verify = async (req, res, next) => {
-  const { token } = req.query;
+  const {
+    token
+  } = req.query;
 
   if (!token) return next('400,token not found');
 
   try {
 
-    const user = await User.findOne({      
+    const user = await User.findOne({
       where: {
         emailVerificationToken: token,
       }
     })
-    
+
     if (!user) return next('403,token is invalid');
 
     isVerified = 1;
@@ -91,7 +108,7 @@ const verify = async (req, res, next) => {
       where: {
         emailVerificationToken: token,
       }
-    })    
+    })
 
     return res.redirect('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
   } catch (error) {
