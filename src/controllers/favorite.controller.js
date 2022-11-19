@@ -37,9 +37,9 @@ const addFavorite = async (req, res, next) => {
 
     if (!recipe) return next('404,Recipe not found');
     if (!user) return next('500,error in user data');
-    if (user.hasFavorite(recipe)) return next('403,duplicate favorite');
+    if (await user.hasFavorite(recipe)) return next('403,duplicate favorite');
 
-    user.addFavorite(recipe);
+    await user.addFavorite(recipe);
 
     return res.status(200).json({
       success: true,
@@ -60,9 +60,9 @@ const deleteFavorite = async (req, res, next) => {
 
     if (!recipe) return next('404,Recipe not found');
     if (!user) return next('500,Error in user data');
-    if (!user.hasFavorite(recipe)) return next('403,Data Error');
+    if (!await user.hasFavorite(recipe)) return next('403,The recipe is not in favorite list');
 
-    user.removeFavorite(recipe);
+    await user.removeFavorite(recipe);
 
     return res.status(200).json({
       success: true,
