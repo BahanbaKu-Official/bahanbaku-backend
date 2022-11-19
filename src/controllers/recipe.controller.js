@@ -92,7 +92,7 @@ const getRecipeById = async (req, res, next) => {
 }
 
 const createRecipe = async (req, res, next) => {
-  const recipeId = `REC${nanoid()}`;
+  const recipeId = `REC${nanoid(13)}`;
 
   try {
     const recipe = await Recipe.create({

@@ -21,7 +21,7 @@ const getTransactions = async (_, res, next) => {
 }
 
 const createTransaction = async (req, res, next) => {
-  const transactionId = `TRC${nanoid()}`;
+  const transactionId = `TRC${nanoid(13)}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
   const { products, paymentMethod, customerDetails } = req.body;

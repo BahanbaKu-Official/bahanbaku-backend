@@ -4,7 +4,7 @@ const Recipe = db.recipe;
 const nanoid = require('../config/nanoid.config');
 
 const createReview = async (req, res, next) => {
-  const reviewId = `REV${nanoid()}`;
+  const reviewId = `REV${nanoid(13)}`;
   const { recipeId } = req.params;
   const { userId } = req.user;
 

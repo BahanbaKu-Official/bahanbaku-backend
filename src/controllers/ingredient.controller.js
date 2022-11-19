@@ -17,7 +17,7 @@ const getIngredients = async (_, res, next) => {
 }
 
 const createIngredient = async (req, res, next) => {
-  const ingredientId = `ING${nanoid()}`;
+  const ingredientId = `ING${nanoid(13)}`;
 
   try {
     const recipe = await Ingredient.create({

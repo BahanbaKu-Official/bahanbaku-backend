@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
 }
 
 const register = async (req, res, next) => {
-  const userId = `USR${nanoid()}`;
+  const userId = `USR${nanoid(13)}`;
   const password = bcrypt.hashSync(req.body.password);
   const {
     email

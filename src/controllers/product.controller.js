@@ -17,7 +17,7 @@ const getProducts = async (_, res, next) => {
 }
 
 const createProduct = async (req, res, next) => {
-  const productId = `PRO${nanoid()}`;
+  const productId = `PRO${nanoid(13)}`;
 
   try {
     const product = await Product.create({
