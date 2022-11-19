@@ -7,12 +7,16 @@ const createReview = async (req, res, next) => {
   const reviewId = `REV${nanoid(13)}`;
   const { recipeId } = req.params;
   const { userId } = req.user;
-
+  const { review:reviewData,rating } = req.body;
   try {
+    const recipe = await Recipe.findByPk(recipeId);
+    if (!reviewData || !rating) return next('400,Review and rating must not be null');
+    if (!recipe) return next('404,recipe doesn\'t exist');
+
     const review = await Review.create({
-      ...req.body,
       reviewId,
-      review: req.body.review,
+      reviewData,
+      rating,
       userId,
       recipeId,
       createdAt: new Date().toISOString(),
@@ -29,6 +33,7 @@ const createReview = async (req, res, next) => {
         recipeId,
       }
     });
+
     await Recipe.update({
       rating: sumReview/countReview,
     }, {
