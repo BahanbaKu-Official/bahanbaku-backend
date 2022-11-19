@@ -67,7 +67,35 @@ const uploadPicture = async (req, res, next) => {
   }
 }
 
+const updateProfile = async (req, res, next) => {  
+  const { userId } = req.user;
+  const { firstName, lastName, phoneNumber } = req.body;  
+
+  try {      
+    const user = await User.update({
+      firstName,
+      lastName,
+      phoneNumber,
+      updatedAt: new Date().toISOString()
+    }, {
+      where: {
+        userId,
+      }
+    })
+
+    if (!user) return next('500, Error when update user');
+
+    return res.status(200).json({
+      success: true,
+      message: 'user profile updated',      
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getUserById,
-  uploadPicture
+  uploadPicture,
+  updateProfile
 }
