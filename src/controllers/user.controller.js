@@ -6,7 +6,11 @@ const getUserById = async (req, res, next) => {
   const { userId } = req.user;
 
   try {
-    const user = await User.findByPk(userId);
+    const user = await User.findByPk(userId,{
+      attributes:['userId','firstName','lastName','phoneNumber','email','createdAt','updatedAt','isVerified','profileImage']
+    });
+
+    if (!user) return next('404,User doesn\'t exist');
     
     return res.status(200).json({
       success: true,

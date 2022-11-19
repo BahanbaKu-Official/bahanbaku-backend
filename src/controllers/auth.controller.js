@@ -45,6 +45,9 @@ const register = async (req, res, next) => {
   const userId = `USR${nanoid(13)}`;
   const password = bcrypt.hashSync(req.body.password);
   const {
+    firstName,
+    lastName,
+    phoneNumber,
     email
   } = req.body;
   const emailToken = `${nanoid()}-${nanoid()}`;
@@ -59,7 +62,10 @@ const register = async (req, res, next) => {
     if (checkExist) return next('403,User already exist');
 
     const user = await User.create({
-      ...req.body,
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
       userId,
       password,
       passwordChangedAt: new Date().toISOString(),
@@ -77,7 +83,13 @@ const register = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'new user created',
-      results: user,
+      results: {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        userId
+      },
     })
   } catch (error) {
     next(error);
