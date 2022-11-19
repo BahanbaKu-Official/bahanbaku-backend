@@ -26,6 +26,7 @@ const step = require('./step.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
+const recipe_user = sequelize.define('recipe_user', {}, { timestamps: false });
 
 recipe.hasMany(ingredient, {
   foreignKey: 'recipeId',
@@ -115,6 +116,17 @@ step.belongsTo(recipe, {
   foreignKey: 'recipeId',
   as: 'recipe'
 })
+
+user.belongsToMany(recipe, {
+  through: recipe_user,
+  foreignKey: 'recipeId',
+  as: 'favorite',
+});
+recipe.belongsToMany(user, {
+  through: recipe_user,
+  foreignKey: 'userId',
+  as: 'favorite',
+});
 
 module.exports = {
   Sequelize,

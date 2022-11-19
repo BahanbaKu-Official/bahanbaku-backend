@@ -11,6 +11,7 @@ const productRoutes = require('./src/routes/product.route');
 const transactionRoutes = require('./src/routes/transaction.route');
 const stepRoutes = require('./src/routes/step.route');
 const userRoutes = require('./src/routes/user.route');
+const favoriteRoutes = require('./src/routes/favorite.route');
 
 const errorHandler = require('./src/utils/errorHandler');
 
@@ -39,6 +40,7 @@ app.use('/admin/products', productRoutes);
 app.use('/transaction', transactionRoutes);
 app.use('/step', stepRoutes);
 app.use('/users', userRoutes);
+app.use('/favorites', favoriteRoutes);
 
 app.use(errorHandler)
 
