@@ -50,7 +50,31 @@ const addFavorite = async (req, res, next) => {
   }
 }
 
+const deleteFavorite = async (req, res, next) => {
+  const { recipeId } = req.params;
+  const { userId } = req.user;
+
+  try {
+    const recipe = await Recipe.findByPk(recipeId);
+    const user = await User.findByPk(userId);
+
+    if (!recipe) return next('404,Recipe not found');
+    if (!user) return next('500,Error in user data');
+    if (!user.hasFavorite(recipe)) return next('403,Data Error');
+
+    user.removeFavorite(recipe);
+
+    return res.status(200).json({
+      success: true,
+      message: 'recipe deleted from favorite',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getFavorites,
-  addFavorite
+  addFavorite,
+  deleteFavorite
 }
