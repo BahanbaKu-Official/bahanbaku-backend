@@ -7,7 +7,7 @@ router.get('/', jwtMiddleware, transaction.getTransactionsByUser);
 
 router.post('/confirm', transaction.confirmTransaction);
 
-router.post('/pay', simulateTransaction.simulate);
+// router.post('/pay', simulateTransaction.simulate);
 
 router.post('/:recipeId', jwtMiddleware, transaction.createTransaction);
 
