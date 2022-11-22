@@ -13,6 +13,9 @@ module.exports = (sequelize, Sequelize) => {
     price: {
       type: Sequelize.INTEGER,
     },
+    productImage: {
+      type: Sequelize.STRING,
+    },
     createdAt: {
       type: Sequelize.DATE
     },
