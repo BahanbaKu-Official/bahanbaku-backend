@@ -1,5 +1,6 @@
 const db = require('../models');
 const Step = db.step;
+const Ingredient = db.ingredient;
 const nanoid = require('../config/nanoid.config');
 
 const getSteps = async (_, res, next) => {
@@ -39,7 +40,27 @@ const createStep = async (req, res, next) => {
   }
 }
 
+const addIngredient = async (req, res, next) => {
+  const { ingredientId } = req.body;
+  const { stepId } = req.params;
+
+  try {    
+    const step = await Step.findByPk(stepId);
+    const ingredient = await Ingredient.findByPk(ingredientId);    
+
+    await step.addIngredient(ingredient);
+
+    return res.status(200).json({
+      success: true,
+      message: 'ingredient added to tag',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getSteps,
   createStep,
+  addIngredient
 }
