@@ -45,9 +45,11 @@ module.exports = (sequelize, Sequelize) => {
     },
     forgotPasswordToken: {
       type: Sequelize.STRING,
+      allowNull: true
     },
     forgotPasswordCreatedAt: {
       type: Sequelize.DATE,
+      allowNull: true
     },
   });
   return user;
