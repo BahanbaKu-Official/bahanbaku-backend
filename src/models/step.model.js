@@ -9,10 +9,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     sequence: {
       type: Sequelize.INTEGER,
-    },
-    recipeId: {
-      type: Sequelize.STRING(16),
-    },
+    },    
     createdAt: {
       type: Sequelize.DATE
     },
