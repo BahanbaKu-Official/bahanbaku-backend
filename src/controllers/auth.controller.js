@@ -75,6 +75,8 @@ const register = async (req, res, next) => {
       role: 'user',
       profileImage: 'https://storage.googleapis.com/bahanbaku-assets/user/blank-profile-picture.png',
       emailVerificationToken: emailToken,
+      forgotPasswordToken: null,
+      forgotPasswordCreatedAt: null
     });
 
     const verificationEmail = emailVerificationHandler(email, emailToken);
@@ -128,8 +130,76 @@ const verify = async (req, res, next) => {
   }
 }
 
+const forgotPasswordRequest = async (req, res, next) => {
+  const {
+    email
+  } = req.body;
+  if (!email) return next('400,email not found');
+
+  const forgotPasswordToken = `${nanoid(16)}-${nanoid(16)}`;
+
+  try {
+    await User.update({
+      forgotPasswordToken,
+      forgotPasswordCreatedAt: new Date().toISOString()
+    },{
+      where: {
+        email
+      },
+    })    
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Reset password has been sent ! Please check your email',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
+const forgotPasswordVerify = async (req, res, next) => {
+  const {
+    token
+  } = req.query;
+
+  const { newPassword } = req.body;
+
+  if (!token) return next('404,token not found');
+  if (!newPassword) return next('404,new password not found');
+  
+  try {
+    const user = await User.findOne({
+      where: {
+        forgotPasswordToken: token
+      },
+    })    
+    
+    if (!user) return next('403,Token not valid');
+
+    const isExpired = (Math.abs(new Date() - user.forgotPasswordCreatedAt) / 1000 / 60) >= 15;
+    if (isExpired) return next('403,Token is expired. Please request password reset again');
+    
+    await User.update({
+      password: bcrypt.hashSync(newPassword),
+      passwordChangedAt: new Date().toISOString()
+    },{
+      where: {
+        forgotPasswordToken: token
+      },
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'Reset password success. Please login again',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   register,
   login,
-  verify
+  verify,
+  forgotPasswordRequest
 }
