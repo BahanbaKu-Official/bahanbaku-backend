@@ -1,6 +1,7 @@
 const db = require('../models');
 const Transaction = db.transaction;
 const Product = db.product;
+const User = db.user;
 const nanoid = require('../config/nanoid.config');
 const { chargeTransaction } = require('../utils/midtrans/chargeTransaction');
 const generateMidtransObj = require('../utils/midtrans/generateMidtransObj');
@@ -24,11 +25,14 @@ const createTransaction = async (req, res, next) => {
   const transactionId = `TRC${nanoid(13)}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products, paymentMethod, customerDetails } = req.body;
+  const { products, paymentMethod } = req.body;
   let total = 0;
-  const itemDetails = [];
+  const itemDetails = [];  
 
   try {
+    const user = await User.findByPk(userId);
+    if (!user) return next('403,User is not valid');
+
     const transaction = await Transaction.create({
       ...req.body,
       transactionId,
@@ -51,6 +55,15 @@ const createTransaction = async (req, res, next) => {
         quantity: products[i].quantity,
       })
     }
+    
+    const customerDetails = {
+      "first_name":user.firstName,
+      "last_name":user.lastName,
+      "email":user.email,
+      "phone":user.phoneNumber,
+    }
+
+    console.log(customerDetails);
 
     const midtrans = generateMidtransObj(paymentMethod, transactionId, total, itemDetails, customerDetails);
     const charge = await chargeTransaction(midtrans);
