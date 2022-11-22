@@ -29,6 +29,8 @@ const createTransaction = async (req, res, next) => {
   let total = 0;
   const itemDetails = [];  
 
+  if (!products || !paymentMethod) return next('400,Product and payment method must not empty');
+
   try {
     const user = await User.findByPk(userId);
     if (!user) return next('403,User is not valid');
@@ -44,9 +46,16 @@ const createTransaction = async (req, res, next) => {
       updatedAt: new Date().toISOString(),
     });
 
+    if (products.length < 1) return next('403,Product must not be 0');
+
     for (let i = 0; i < products.length; i++) {
       const product = await Product.findByPk(products[i].id);
+      
+      if (!product) return next('404,Product not found');
+      if (products[i].quantity <= 0) return next('403,Quantity must more than 0');
+      if (products[i].quantity > product.stock) return next('403,Quantity must not more than stock');
       transaction.addProduct(product);
+
       total = (total + product.price * products[i].quantity);
       itemDetails.push({
         id: product.id,
