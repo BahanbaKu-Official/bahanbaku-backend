@@ -38,7 +38,7 @@ module.exports = {
         allowNull: true
       },
       transferImage: {
-        type: Sequelize.String,
+        type: Sequelize.STRING,
         allowNull: true
       }
     });
