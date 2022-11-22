@@ -29,6 +29,7 @@ const bank = require('./refund.model')(sequelize, Sequelize);
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
 const recipe_user = sequelize.define('recipe_user', {}, { timestamps: false });
+const step_ingredients = sequelize.define('step_ingredients', {}, { timestamps: false });
 
 recipe.hasMany(ingredient, {
   foreignKey: 'recipeId',
@@ -137,6 +138,17 @@ refund.hasMany(transaction, {
 transaction.belongsTo(refund, {  
   foreignKey: 'transactionId',
   as: 'refund',
+});
+
+step.belongsToMany(ingredient, {
+  through: step_ingredients,
+  foreignKey: 'ingredientId',
+  as: 'rec-ing' 
+});
+ingredient.belongsToMany(step, {
+  through: step_ingredients,
+  foreignKey: 'stepId',  
+  as: 'rec-ing'
 });
 
 module.exports = {
