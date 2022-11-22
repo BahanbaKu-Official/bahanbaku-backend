@@ -4,6 +4,7 @@ const nanoid = require('../config/nanoid.config');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const emailVerificationHandler = require('../utils/email/generateVerificationEmail');
+const passwordResetHandler = require('../utils/email/generateResetPasswordEmail');
 const sendEmail = require('../utils/email/sendEmail');
 
 const login = async (req, res, next) => {
@@ -98,7 +99,7 @@ const register = async (req, res, next) => {
   }
 }
 
-const verify = async (req, res, next) => {
+const verifyEmail = async (req, res, next) => {
   const {
     token
   } = req.query;
@@ -139,15 +140,26 @@ const forgotPasswordRequest = async (req, res, next) => {
   const forgotPasswordToken = `${nanoid(16)}-${nanoid(16)}`;
 
   try {
-    await User.update({
-      forgotPasswordToken,
-      forgotPasswordCreatedAt: new Date().toISOString()
-    },{
+    const user = await User.findOne({
       where: {
         email
       },
-    })    
-    
+    });
+
+    if (user) {
+      await User.update({
+        forgotPasswordToken,
+        forgotPasswordCreatedAt: new Date().toISOString()
+      }, {
+        where: {
+          email
+        },
+      })
+
+      const resetEmail = passwordResetHandler(email, forgotPasswordToken);
+      await sendEmail(resetEmail);
+    }
+
     return res.status(200).json({
       success: true,
       message: 'Reset password has been sent ! Please check your email',
@@ -162,27 +174,31 @@ const forgotPasswordVerify = async (req, res, next) => {
     token
   } = req.query;
 
-  const { newPassword } = req.body;
+  const {
+    newPassword
+  } = req.body;
 
   if (!token) return next('404,token not found');
   if (!newPassword) return next('404,new password not found');
-  
+
   try {
     const user = await User.findOne({
       where: {
         forgotPasswordToken: token
       },
-    })    
-    
+    });
+
     if (!user) return next('403,Token not valid');
 
     const isExpired = (Math.abs(new Date() - user.forgotPasswordCreatedAt) / 1000 / 60) >= 15;
     if (isExpired) return next('403,Token is expired. Please request password reset again');
-    
+
     await User.update({
       password: bcrypt.hashSync(newPassword),
-      passwordChangedAt: new Date().toISOString()
-    },{
+      passwordChangedAt: new Date().toISOString(),
+      forgotPasswordToken: null,
+      forgotPasswordCreatedAt: null
+    }, {
       where: {
         forgotPasswordToken: token
       },
@@ -200,6 +216,7 @@ const forgotPasswordVerify = async (req, res, next) => {
 module.exports = {
   register,
   login,
-  verify,
-  forgotPasswordRequest
+  verifyEmail,
+  forgotPasswordRequest,
+  forgotPasswordVerify
 }
