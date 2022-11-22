@@ -43,6 +43,12 @@ module.exports = (sequelize, Sequelize) => {
     deletedAt: {
       type: Sequelize.DATE,
     },
+    forgotPasswordToken: {
+      type: Sequelize.STRING,
+    },
+    forgotPasswordCreatedAt: {
+      type: Sequelize.DATE,
+    },
   });
   return user;
 }
