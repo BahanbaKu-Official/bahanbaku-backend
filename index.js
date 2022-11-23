@@ -13,7 +13,7 @@ const stepRoutes = require('./src/routes/step.route');
 const userRoutes = require('./src/routes/user.route');
 const favoriteRoutes = require('./src/routes/favorite.route');
 const refundRoutes = require('./src/routes/refund.route');
-const adminRefundRoutes = require('./src/routes/refund.route');
+const adminRefundRoutes = require('./src/routes/admin.refund.route');
 
 const errorHandler = require('./src/utils/errorHandler');
 
