@@ -44,7 +44,7 @@ app.use('/step', stepRoutes);
 app.use('/users', userRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/refund', refundRoutes);
-app.use('/admin/refund', refundRoutes);
+app.use('/admin/refund', adminRefundRoutes);
 
 app.use(errorHandler)
 
