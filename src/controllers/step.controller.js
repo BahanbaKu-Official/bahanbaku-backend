@@ -48,14 +48,11 @@ const addIngredientStep = async (req, res, next) => {
     const step = await Step.findByPk(stepId);
     const ingredient = await Ingredient.findByPk(ingredientId);    
 
-    console.log(ingredient);
     await step.addIngredient(ingredient);
-    const x = await step.countIngredients();
-    console.log(x);
 
     return res.status(200).json({
       success: true,
-      message: 'ingredient added to tag',
+      message: 'ingredient added to step',
     })
   } catch (error) {
     next(error);
