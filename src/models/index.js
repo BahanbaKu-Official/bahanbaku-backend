@@ -24,7 +24,7 @@ const product = require('./product.model')(sequelize, Sequelize);
 const transaction = require('./transaction.model')(sequelize, Sequelize);
 const step = require('./step.model')(sequelize, Sequelize);
 const refund = require('./refund.model')(sequelize, Sequelize);
-const bank = require('./refund.model')(sequelize, Sequelize);
+const bank = require('./bank.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });

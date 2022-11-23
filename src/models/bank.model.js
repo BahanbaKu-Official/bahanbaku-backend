@@ -8,6 +8,8 @@ module.exports = (sequelize, Sequelize) => {
         bankName: {
             type: Sequelize.STRING,
         }
+    },{
+        timestamps:false
     });
     return bank;
 }
