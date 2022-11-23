@@ -40,7 +40,7 @@ const createStep = async (req, res, next) => {
   }
 }
 
-const addIngredient = async (req, res, next) => {
+const addIngredientStep = async (req, res, next) => {
   const { ingredientId } = req.body;
   const { stepId } = req.params;
 
@@ -48,7 +48,10 @@ const addIngredient = async (req, res, next) => {
     const step = await Step.findByPk(stepId);
     const ingredient = await Ingredient.findByPk(ingredientId);    
 
+    console.log(ingredient);
     await step.addIngredient(ingredient);
+    const x = await step.countIngredients();
+    console.log(x);
 
     return res.status(200).json({
       success: true,
@@ -62,5 +65,5 @@ const addIngredient = async (req, res, next) => {
 module.exports = {
   getSteps,
   createStep,
-  addIngredient
+  addIngredientStep
 }

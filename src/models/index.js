@@ -102,15 +102,6 @@ transaction.belongsTo(recipe, {
   as: 'recipe'
 })
 
-step.hasMany(ingredient, {
-  foreignKey: 'stepId',
-  as: 'ingredients'
-})
-ingredient.belongsTo(step, {
-  foreignKey: 'stepId',
-  as: 'step',
-})
-
 recipe.hasMany(step, {
   foreignKey: 'recipeId',
   as: 'steps',
@@ -143,12 +134,12 @@ transaction.belongsTo(refund, {
 step.belongsToMany(ingredient, {
   through: step_ingredients,
   foreignKey: 'ingredientId',
-  as: 'rec-ing' 
+   
 });
 ingredient.belongsToMany(step, {
   through: step_ingredients,
   foreignKey: 'stepId',  
-  as: 'rec-ing'
+  
 });
 
 module.exports = {

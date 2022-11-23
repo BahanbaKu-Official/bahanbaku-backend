@@ -5,6 +5,6 @@ router.get('/', step.getSteps);
 
 router.post('/:recipeId', step.createStep);
 
-router.put('/:stepId', step.addIngredient);
+router.put('/:stepId', step.addIngredientStep);
 
 module.exports = router;
