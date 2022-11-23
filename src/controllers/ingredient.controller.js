@@ -5,7 +5,7 @@ const nanoid = require('../config/nanoid.config');
 const getIngredients = async (_, res, next) => {
   try {
     const ingredients = await Ingredient.findAll();
-    
+
     return res.status(200).json({
       success: true,
       message: 'all ingredients grabbed',
@@ -37,7 +37,37 @@ const createIngredient = async (req, res, next) => {
   }
 }
 
+const relateToProduct = async (req, res, next) => {
+  const {
+    ingredientId
+  } = req.params;
+  const {
+    productId
+  } = req.body;
+
+  console.log(productId);
+
+  try {
+    const ingredient = await Ingredient.update({
+      productId,
+      updatedAt: new Date().toISOString(),
+    }, {
+      where: {
+        ingredientId
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'product added to ingredient',
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getIngredients,
   createIngredient,
+  relateToProduct
 }

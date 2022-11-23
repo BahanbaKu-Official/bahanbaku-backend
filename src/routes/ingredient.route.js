@@ -7,4 +7,6 @@ router.get('/', jwtMiddleware, ingredient.getIngredients);
 
 router.post('/', ingredient.createIngredient);
 
+router.put('/:ingredientId', ingredient.relateToProduct);
+
 module.exports = router;
