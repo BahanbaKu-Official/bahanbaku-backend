@@ -40,6 +40,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
     },   
+    recieverName: {
+      type: Sequelize.STRING,
+    },
+    recieverPhoneNumber: {
+      type: Sequelize.STRING,
+    },
   });
   return addresses;
 }
