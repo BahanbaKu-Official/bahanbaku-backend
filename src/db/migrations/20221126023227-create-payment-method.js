@@ -17,6 +17,9 @@ module.exports = {
       paymentCategory: {
         type: Sequelize.STRING,
       },
+      paymentCode: {
+        type: Sequelize.STRING,
+      },
     });
   },
 

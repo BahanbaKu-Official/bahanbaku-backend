@@ -26,15 +26,18 @@ const createTransaction = async (req, res, next) => {
   const transactionId = `TRC${nanoid(13)}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products, paymentMethod } = req.body;
+  const { products, paymentId } = req.body;
   let total = 0;
   const itemDetails = [];  
 
-  if (!products || !paymentMethod) return next('400,Product and payment method must not empty');
+  if (!products || !paymentId) return next('400,Product and payment id must not empty');
 
   try {
     const user = await User.findByPk(userId);
     if (!user) return next('403,User is not valid');
+
+    const payment_method = await PaymentMethod.findByPk(paymentId)
+    const paymentCode = payment_method['paymentCode'];
 
     const transaction = await Transaction.create({
       ...req.body,
@@ -42,7 +45,7 @@ const createTransaction = async (req, res, next) => {
       userId,
       recipeId,
       status: 'unpaid',
-      paymentMethod,
+      paymentMethod:paymentCode,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -71,14 +74,12 @@ const createTransaction = async (req, res, next) => {
       "last_name":user.lastName,
       "email":user.email,
       "phone":user.phoneNumber,
-    }
+    }    
 
-    console.log(customerDetails);
-
-    const midtrans = generateMidtransObj(paymentMethod, transactionId, total, itemDetails, customerDetails);
+    const midtrans = generateMidtransObj(paymentCode, transactionId, total, itemDetails, customerDetails);
     const charge = await chargeTransaction(midtrans);
 
-    const va = vaParser(paymentMethod,charge);
+    const va = vaParser(paymentCode,charge);
 
     await Transaction.update({
       total,

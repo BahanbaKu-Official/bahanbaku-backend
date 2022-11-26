@@ -8,6 +8,9 @@ module.exports = (sequelize, Sequelize) => {
     paymentName: {
       type: Sequelize.STRING,
     },
+    paymentCode: {
+      type: Sequelize.STRING,
+    },
     paymentImage: {
       type: Sequelize.STRING,
     },
