@@ -101,7 +101,7 @@ const createTransaction = async (req, res, next) => {
       success: true,
       message: 'new transaction created',
       results: {
-        pay,
+        paymentMethod:paymentCode,
         gopayId: charge.actions ? charge.actions[1].url.split('=')[1] : null,
         va,
         billKey: charge.bill_key || null,
