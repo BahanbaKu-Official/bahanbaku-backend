@@ -16,10 +16,10 @@ module.exports = {
       latitude: {
         type: Sequelize.DOUBLE,
       },
-      recieverName: {
+      receiverName: {
         type: Sequelize.STRING,
       },
-      recieverPhoneNumber: {
+      receiverPhoneNumber: {
         type: Sequelize.STRING,
       },
       street: {
