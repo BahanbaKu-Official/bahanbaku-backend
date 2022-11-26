@@ -131,6 +131,33 @@ const createAddress = async (req, res, next) => {
   }
 }
 
+const deleteAddress = async (req, res, next) => {  
+  const { userId } = req.user;
+  const { addressId } = req.params;
+
+  try {      
+    const user = await User.findByPk(userId);    
+    if (!user) return next('404,User not found');    
+
+    const address = await Address.findByPk(addressId);
+    if (!address) return next('404,Address not found');
+
+    const deleteAddress = await Address.destroy({
+      where:{
+        addressId,
+        userId
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'address deleted'      
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 const getAddressByUser = async (req, res, next) => {  
   const { userId } = req.user;  
 
@@ -187,5 +214,6 @@ module.exports = {
   updateProfile,
   createAddress,
   getAddressByUser,
-  getAddressById
+  getAddressById,
+  deleteAddress
 }

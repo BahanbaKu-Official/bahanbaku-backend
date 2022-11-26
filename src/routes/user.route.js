@@ -8,6 +8,7 @@ router.post('/update/picture', jwtMiddleware, multer.single('profile-file'), use
 router.post('/update/profile', jwtMiddleware, user.updateProfile);
 router.post('/address', jwtMiddleware, user.createAddress);
 router.get('/address', jwtMiddleware, user.getAddressByUser);
+router.delete('/address/:addressId', jwtMiddleware, user.deleteAddress);
 router.get('/address/:addressId', jwtMiddleware, user.getAddressById);
 
 module.exports = router;
