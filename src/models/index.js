@@ -28,11 +28,13 @@ const bank = require('./bank.model')(sequelize, Sequelize);
 const address = require('./address.model')(sequelize, Sequelize);
 const payment_method = require('./payment-method.model')(sequelize, Sequelize);
 const transaction_status = require('./transaction-status.model')(sequelize, Sequelize);
+const direct_pay = require('./direct-pay.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
 const recipe_user = sequelize.define('recipe_user', {}, { timestamps: false });
 const step_ingredients = sequelize.define('step_ingredients', {}, { timestamps: false });
+const product_directPay = sequelize.define('product_directPays', {}, { timestamps: false });
 
 recipe.hasMany(ingredient, {
   foreignKey: 'recipeId',
@@ -96,11 +98,31 @@ product.belongsToMany(transaction, {
   foreignKey: 'productId',
 })
 
+direct_pay.belongsToMany(product, {
+  through: product_directPay,
+  as: 'products',
+  foreignKey: 'directPayId',
+});
+product.belongsToMany(direct_pay, {
+  through: product_directPay,
+  as: 'directPays',
+  foreignKey: 'productId',
+})
+
 recipe.hasMany(transaction, {
   foreignKey: 'recipeId',
   as: 'transactions',
 })
 transaction.belongsTo(recipe, {
+  foreignKey: 'recipeId',
+  as: 'recipe'
+})
+
+recipe.hasMany(direct_pay, {
+  foreignKey: 'recipeId',
+  as: 'directPays',
+})
+direct_pay.belongsTo(recipe, {
   foreignKey: 'recipeId',
   as: 'recipe'
 })
@@ -165,5 +187,6 @@ module.exports = {
   bank,
   address,
   payment_method,
-  transaction_status
+  transaction_status,
+  direct_pay
 }

@@ -13,6 +13,7 @@ const stepRoutes = require('./src/routes/step.route');
 const userRoutes = require('./src/routes/user.route');
 const favoriteRoutes = require('./src/routes/favorite.route');
 const refundRoutes = require('./src/routes/refund.route');
+const directPayRoutes = require('./src/routes/direct-pay.route');
 const adminRefundRoutes = require('./src/routes/admin.refund.route');
 const adminTransactionRoutes = require('./src/routes/admin.transaction.route');
 
@@ -45,6 +46,7 @@ app.use('/step', stepRoutes);
 app.use('/users', userRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/refund', refundRoutes);
+app.use('/direct-pay', directPayRoutes);
 app.use('/admin/refund', adminRefundRoutes);
 app.use('/admin/transaction', adminTransactionRoutes);
 
