@@ -50,15 +50,13 @@ const createRefund = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'success create refund',
-      results: {
-        createdAt,
+      results: {        
         refundId,
         userId,
         transactionId,
         bankOwner,
         bankAccount,
-        bankName,
-        isPaid
+        bankName        
       },
     })
   } catch (error) {

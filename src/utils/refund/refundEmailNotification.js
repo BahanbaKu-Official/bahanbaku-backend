@@ -1,7 +1,7 @@
 const { gmailEmail} = require("../../config/email.config");
 
 const vericationHandler = (user,transaction,refund) => {
-    const listReciever = ['rifqi977@gmail.com','c7006f0639@bangkit.academy'];
+    const listReciever = ['rifqi977@gmail.com','rigelvibi51@gmail.com'];
 
     return {
         from: gmailEmail,  // sender address
