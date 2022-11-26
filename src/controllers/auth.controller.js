@@ -52,6 +52,7 @@ const register = async (req, res, next) => {
     email
   } = req.body;
   const emailToken = `${nanoid()}-${nanoid()}`;
+  if (typeof email != 'string') return next('403,email must be a string');  
 
   try {
     const checkExist = await User.findOne({
@@ -136,7 +137,7 @@ const forgotPasswordRequest = async (req, res, next) => {
     email
   } = req.body;
   if (!email) return next('400,email not found');
-
+  if (typeof email != 'string') return next('403,email must be a string');
   const forgotPasswordToken = `${nanoid(16)}-${nanoid(16)}`;
 
   try {
