@@ -40,10 +40,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
     },   
-    recieverName: {
+    receiverName: {
       type: Sequelize.STRING,
     },
-    recieverPhoneNumber: {
+    receiverPhoneNumber: {
       type: Sequelize.STRING,
     },
   });
