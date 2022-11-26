@@ -98,7 +98,7 @@ const updateProfile = async (req, res, next) => {
 
 const createAddress = async (req, res, next) => {  
   const { userId } = req.user;
-  const { longitude, latitude, street, district, city, province, zipCode, label, recieverName, recieverPhoneNumber } = req.body;  
+  const { longitude, latitude, street, district, city, province, zipCode, label, receiverName, receiverPhoneNumber } = req.body;  
 
   try {      
     const user = await User.findByPk(userId);    
@@ -117,8 +117,8 @@ const createAddress = async (req, res, next) => {
       province,
       zipCode,
       label,
-      recieverName,
-      recieverPhoneNumber
+      receiverName,
+      receiverPhoneNumber
     })
 
     return res.status(200).json({
