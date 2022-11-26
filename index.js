@@ -14,6 +14,7 @@ const userRoutes = require('./src/routes/user.route');
 const favoriteRoutes = require('./src/routes/favorite.route');
 const refundRoutes = require('./src/routes/refund.route');
 const adminRefundRoutes = require('./src/routes/admin.refund.route');
+const adminTransactionRoutes = require('./src/routes/admin.transaction.route');
 
 const errorHandler = require('./src/utils/errorHandler');
 
@@ -45,6 +46,7 @@ app.use('/users', userRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/refund', refundRoutes);
 app.use('/admin/refund', adminRefundRoutes);
+app.use('/admin/transaction', adminTransactionRoutes);
 
 app.use(errorHandler)
 
