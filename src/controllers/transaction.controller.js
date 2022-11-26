@@ -39,6 +39,9 @@ const createTransaction = async (req, res, next) => {
     const payment_method = await PaymentMethod.findByPk(paymentId)
     const paymentCode = payment_method['paymentCode'];
 
+    console.log(payment_method);
+    console.log(paymentCode);
+
     const transaction = await Transaction.create({
       ...req.body,
       transactionId,
@@ -98,7 +101,7 @@ const createTransaction = async (req, res, next) => {
       success: true,
       message: 'new transaction created',
       results: {
-        paymentMethod,
+        pay,
         gopayId: charge.actions ? charge.actions[1].url.split('=')[1] : null,
         va,
         billKey: charge.bill_key || null,
