@@ -9,7 +9,10 @@ router.post('/confirm', transaction.confirmTransaction);
 
 // router.post('/pay', simulateTransaction.simulate);
 
+router.get('/payment-method', jwtMiddleware, transaction.getPaymentMethod);
+
 router.post('/:recipeId', jwtMiddleware, transaction.createTransaction);
+
 
 
 module.exports = router;

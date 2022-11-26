@@ -2,6 +2,7 @@ const db = require('../models');
 const Transaction = db.transaction;
 const Product = db.product;
 const User = db.user;
+const PaymentMethod = db.payment_method;
 const nanoid = require('../config/nanoid.config');
 const { chargeTransaction } = require('../utils/midtrans/chargeTransaction');
 const generateMidtransObj = require('../utils/midtrans/generateMidtransObj');
@@ -169,9 +170,24 @@ const confirmTransaction = async (req, res, next) => {
   }
 }
 
+const getPaymentMethod = async (req, res, next) => {  
+  try {
+    const payment_method = await PaymentMethod.findAll();    
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Success get all payment method',
+      results: payment_method,
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getTransactions,
   createTransaction,
   getTransactionsByUser,
   confirmTransaction,
+  getPaymentMethod
 }

@@ -26,6 +26,7 @@ const step = require('./step.model')(sequelize, Sequelize);
 const refund = require('./refund.model')(sequelize, Sequelize);
 const bank = require('./bank.model')(sequelize, Sequelize);
 const address = require('./address.model')(sequelize, Sequelize);
+const payment_method = require('./payment-method.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
@@ -161,5 +162,6 @@ module.exports = {
   step,
   refund,
   bank,
-  address
+  address,
+  payment_method
 }
