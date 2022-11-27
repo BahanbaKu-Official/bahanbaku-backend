@@ -176,25 +176,12 @@ const confirmTransaction = async (req, res, next) => {
 
 const getPaymentMethod = async (req, res, next) => {  
   try {
-    const bank_transfer = await PaymentMethod.findAll({
-      where:{
-        paymentCategory:'transfer bank'
-      }  
-    });
-
-    const digital_wallet = await PaymentMethod.findAll({
-      where:{
-        paymentCategory:'dompet digital'
-      }  
-    });
+    const payment_method = await PaymentMethod.findAll();    
 
     return res.status(200).json({
       success: true,
       message: 'Success get all payment method',
-      results: {
-        'transferBank':bank_transfer,
-        'dompetDigital':digital_wallet
-      },
+      results: payment_method,
     })
   } catch (error) {
     next(error);
