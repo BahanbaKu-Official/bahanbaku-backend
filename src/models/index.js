@@ -29,6 +29,7 @@ const address = require('./address.model')(sequelize, Sequelize);
 const payment_method = require('./payment-method.model')(sequelize, Sequelize);
 const transaction_status = require('./transaction-status.model')(sequelize, Sequelize);
 const direct_pay = require('./direct-pay.model')(sequelize, Sequelize);
+const subscription = require('./subscription.model')(sequelize, Sequelize);
 
 const recipe_tag = sequelize.define('recipe_tags', {}, { timestamps: false });
 const product_transaction = sequelize.define('product_transaction', {}, { timestamps: false });
@@ -188,5 +189,6 @@ module.exports = {
   address,
   payment_method,
   transaction_status,
-  direct_pay
+  direct_pay,
+  subscription
 }
