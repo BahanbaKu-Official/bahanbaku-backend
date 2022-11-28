@@ -1,19 +1,23 @@
 const db = require('../models');
 const cloudStorage = require('../config/cloudstorage.config');
-const { nanoid } = require('nanoid');
+const {
+  nanoid
+} = require('nanoid');
 const User = db.user;
 const Address = db.address;
 
 const getUserById = async (req, res, next) => {
-  const { userId } = req.user;
+  const {
+    userId
+  } = req.user;
 
   try {
-    const user = await User.findByPk(userId,{
-      attributes:['userId','firstName','lastName','phoneNumber','email','createdAt','updatedAt','isVerified','profileImage']
+    const user = await User.findByPk(userId, {
+      attributes: ['userId', 'firstName', 'lastName', 'phoneNumber', 'email', 'createdAt', 'updatedAt', 'isVerified', 'profileImage']
     });
 
     if (!user) return next('404,User doesn\'t exist');
-    
+
     return res.status(200).json({
       success: true,
       message: 'one user grabbed',
@@ -24,18 +28,23 @@ const getUserById = async (req, res, next) => {
   }
 }
 
-const uploadPicture = async (req, res, next) => {    
-  const { userId } = req.user;
+const uploadPicture = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
   const bucketName = process.env.CLOUD_STORAGE_BUCKET;
 
   try {
     const user = await User.findByPk(userId);
-    
+
     if (!user) return next('404,user not listed');
-    
-    const bucket = cloudStorage.bucket(bucketName);    
-    const { originalname, buffer } = req.file;
-    const ext = originalname.split('.')[1];    
+
+    const bucket = cloudStorage.bucket(bucketName);
+    const {
+      originalname,
+      buffer
+    } = req.file;
+    const ext = originalname.split('.')[1];
     const blob = bucket.file(`user/${userId}.${ext}`);
     const blobStream = blob.createWriteStream({
       resumeable: false,
@@ -44,7 +53,7 @@ const uploadPicture = async (req, res, next) => {
     blobStream
       .on('finish', async () => {
         const profileImage = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
-        
+
         const updateUser = await User.update({
           profileImage,
         }, {
@@ -69,11 +78,17 @@ const uploadPicture = async (req, res, next) => {
   }
 }
 
-const updateProfile = async (req, res, next) => {  
-  const { userId } = req.user;
-  const { firstName, lastName, phoneNumber } = req.body;  
+const updateProfile = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
+  const {
+    firstName,
+    lastName,
+    phoneNumber
+  } = req.body;
 
-  try {      
+  try {
     const user = await User.update({
       firstName,
       lastName,
@@ -89,20 +104,44 @@ const updateProfile = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: 'user profile updated',      
+      message: 'user profile updated',
     })
   } catch (error) {
     next(error);
   }
 }
 
-const createAddress = async (req, res, next) => {  
-  const { userId } = req.user;
-  const { longitude, latitude, street, district, city, province, zipCode, label, receiverName, receiverPhoneNumber } = req.body;  
+const createAddress = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
+  const {
+    longitude,
+    latitude,
+    street,
+    district,
+    city,
+    province,
+    zipCode,
+    label,
+    receiverName,
+    receiverPhoneNumber,
+    isPrimary
+  } = req.body;
 
-  try {      
-    const user = await User.findByPk(userId);    
+  try {
+    const user = await User.findByPk(userId);
     if (!user) return next('404,User not found');
+    
+    if (isPrimary === 'true') {      
+      await Address.update({
+        isPrimary: false
+      },{
+        where: {
+          userId          
+        }
+      })
+    }
 
     const addressId = `ADR${nanoid(13)}`;
 
@@ -118,79 +157,157 @@ const createAddress = async (req, res, next) => {
       zipCode,
       label,
       receiverName,
-      receiverPhoneNumber
+      receiverPhoneNumber,
+      isPrimary
     })
 
     return res.status(200).json({
       success: true,
       message: 'new address created',
-      results: address    
+      results: address
     })
   } catch (error) {
     next(error);
   }
 }
 
-const deleteAddress = async (req, res, next) => {  
-  const { userId } = req.user;
+const updateAddress = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
   const { addressId } = req.params;
+  const {
+    longitude,
+    latitude,
+    street,
+    district,
+    city,
+    province,
+    zipCode,
+    label,
+    receiverName,
+    receiverPhoneNumber,
+    isPrimary
+  } = req.body;
 
-  try {      
-    const user = await User.findByPk(userId);    
-    if (!user) return next('404,User not found');    
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) return next('404,User not found');
+    const addressPrimary = await Address.findByPk(addressId);        
+        
+    if (isPrimary === 'true') {             
+      await Address.update({
+        isPrimary: false
+      },{
+        where: {
+          userId          
+        }
+      })      
+    }else{      
+      if (addressPrimary.isPrimary == true) return next('403,cannot remove primary address');      
+    }   
+    
+    await Address.update({      
+      userId,
+      longitude,
+      latitude,
+      street,
+      district,
+      city,
+      province,
+      zipCode,
+      label,
+      receiverName,
+      receiverPhoneNumber,
+      isPrimary
+    },{
+      where:{
+        addressId
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'success update address',      
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
+const deleteAddress = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
+  const {
+    addressId
+  } = req.params;
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) return next('404,User not found');
 
     const address = await Address.findByPk(addressId);
     if (!address) return next('404,Address not found');
 
+    const addressPrimary = await Address.findByPk(addressId);    
+
+    if (addressPrimary.isPrimary == true) return next('403,cannot remove primary address');
+
     const deleteAddress = await Address.destroy({
-      where:{
-        addressId,
-        userId
+      where: {
+        addressId
       }
     })
 
     return res.status(200).json({
       success: true,
-      message: 'address deleted'      
+      message: 'address deleted'
     })
   } catch (error) {
     next(error);
   }
 }
 
-const getAddressByUser = async (req, res, next) => {  
-  const { userId } = req.user;  
+const getAddressByUser = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
 
-  try {      
-    const user = await User.findByPk(userId);    
+  try {
+    const user = await User.findByPk(userId);
     if (!user) return next('404,User not found');
-    
+
     const address = await Address.findAll({
-      where:{        
+      where: {
         userId
       }
-    })    
+    })
 
     return res.status(200).json({
       success: true,
       message: 'get address by user',
-      results: address    
+      results: address
     })
   } catch (error) {
     next(error);
   }
 }
 
-const getAddressById = async (req, res, next) => {  
-  const { userId } = req.user;
-  const { addressId } = req.params;
-    
-  try {      
-    const user = await User.findByPk(userId);    
+const getAddressById = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
+  const {
+    addressId
+  } = req.params;
+
+  try {
+    const user = await User.findByPk(userId);
     if (!user) return next('404,User not found');
-    
+
     const address = await Address.findOne({
-      where:{
+      where: {
         addressId,
         userId
       }
@@ -201,7 +318,7 @@ const getAddressById = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'get address by id',
-      results: address    
+      results: address
     })
   } catch (error) {
     next(error);
@@ -213,6 +330,7 @@ module.exports = {
   uploadPicture,
   updateProfile,
   createAddress,
+  updateAddress,
   getAddressByUser,
   getAddressById,
   deleteAddress

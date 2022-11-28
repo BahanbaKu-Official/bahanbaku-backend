@@ -7,6 +7,10 @@ module.exports = (sequelize, Sequelize) => {
     userId: {
       type: Sequelize.STRING(16),
     },
+    isPrimary: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     longitude: {
       type: Sequelize.DOUBLE,
     },
