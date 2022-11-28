@@ -4,6 +4,7 @@ const Product = db.product;
 const User = db.user;
 const cloudStorage = require('../config/cloudstorage.config');
 const nanoid = require('../config/nanoid.config');
+const directPayBank = require('../config/direct-pay.config');
 
 const createDirectPay = async (req, res, next) => {
   const directPayId = `DRP${nanoid(13)}`;
@@ -42,6 +43,19 @@ const createDirectPay = async (req, res, next) => {
       success: true,
       message: 'new direct payment created',
       results: directPay,
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
+const getBahanbakuBank = async (req, res, next) => {  
+  try {    
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Get direct payment BahanbaKu account',
+      results: directPayBank,
     })
   } catch (error) {
     next(error);
@@ -93,6 +107,7 @@ const uploadPayment = async (req, res, next) => {
     if (directPay.userId !== user.userId) return next('403,You don\;t own this direct payment');
 
     const bucket = cloudStorage.bucket(bucketName);    
+    console.log(req.file);
     const { originalname, buffer } = req.file;
     const ext = originalname.split('.')[1];    
     const blob = bucket.file(`direct-pay/${directPayId}.${ext}`);
@@ -131,5 +146,6 @@ const uploadPayment = async (req, res, next) => {
 module.exports = {
   createDirectPay,
   getDirectPayByUser,
-  uploadPayment
+  uploadPayment,
+  getBahanbakuBank
 }
