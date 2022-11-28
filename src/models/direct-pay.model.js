@@ -5,10 +5,13 @@ module.exports = (sequelize, Sequelize) => {
           primaryKey: true,
         },
         userId: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(16),
         },
         recipeId: {
-          type: Sequelize.STRING,
+          type: Sequelize.STRING(16),
+        },
+        addressId: {
+          type: Sequelize.STRING(16),
         },
         status: {
           type: Sequelize.STRING,

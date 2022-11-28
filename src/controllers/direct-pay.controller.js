@@ -8,7 +8,7 @@ const createDirectPay = async (req, res, next) => {
   const directPayId = `DRP${nanoid(13)}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products } = req.body;
+  const { products, addressId } = req.body;
   let total = 0;
 
   if (!products) return next('400,Product and payment id must not empty');
@@ -18,7 +18,8 @@ const createDirectPay = async (req, res, next) => {
     if (!user) return next('403,User is not valid');    
 
     const directPay = await DirectPay.create({
-      ...req.body,
+      products,
+      addressId,
       directPayId,
       userId,
       recipeId,

@@ -26,7 +26,7 @@ const createTransaction = async (req, res, next) => {
   const transactionId = `TRC${nanoid(13)}`;
   const { userId } = req.user;
   const { recipeId } = req.params;
-  const { products, paymentId } = req.body;
+  const { products, paymentId, addressId } = req.body;
   let total = 0;
   const itemDetails = [];  
 
@@ -43,7 +43,9 @@ const createTransaction = async (req, res, next) => {
     console.log(paymentCode);
 
     const transaction = await Transaction.create({
-      ...req.body,
+      products,
+      addressId,
+      paymentId,
       transactionId,
       userId,
       recipeId,
