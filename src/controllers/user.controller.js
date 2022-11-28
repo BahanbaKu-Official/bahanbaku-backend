@@ -325,6 +325,34 @@ const getAddressById = async (req, res, next) => {
   }
 }
 
+const getPrimaryAddress = async (req, res, next) => {
+  const {
+    userId
+  } = req.user;
+  
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) return next('404,User not found');
+
+    const address = await Address.findOne({
+      where: {        
+        userId,
+        isPrimary: true
+      }
+    })
+
+    if (!address) return next('404,No primary address found');
+
+    return res.status(200).json({
+      success: true,
+      message: 'get primary address',
+      results: address
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getUserById,
   uploadPicture,
@@ -333,5 +361,6 @@ module.exports = {
   updateAddress,
   getAddressByUser,
   getAddressById,
-  deleteAddress
+  deleteAddress,
+  getPrimaryAddress
 }

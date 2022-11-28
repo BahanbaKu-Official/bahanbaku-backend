@@ -8,6 +8,7 @@ router.post('/update/picture', jwtMiddleware, multer.single('image'), user.uploa
 router.post('/update/profile', jwtMiddleware, user.updateProfile);
 router.post('/address', jwtMiddleware, user.createAddress);
 router.get('/address', jwtMiddleware, user.getAddressByUser);
+router.get('/address/primary', jwtMiddleware, user.getPrimaryAddress);
 router.put('/address/:addressId', jwtMiddleware, user.updateAddress);
 router.delete('/address/:addressId', jwtMiddleware, user.deleteAddress);
 router.get('/address/:addressId', jwtMiddleware, user.getAddressById);
