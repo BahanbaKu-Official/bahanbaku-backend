@@ -2,6 +2,7 @@ const db = require('../models');
 const DirectPay = db.direct_pay;
 const Product = db.product;
 const User = db.user;
+const cloudStorage = require('../config/cloudstorage.config');
 const nanoid = require('../config/nanoid.config');
 
 const createDirectPay = async (req, res, next) => {
