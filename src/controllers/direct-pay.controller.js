@@ -120,7 +120,8 @@ const uploadPayment = async (req, res, next) => {
         const paymentLink = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
         
         const updateDirectPay = await DirectPay.update({
-          paymentLink
+          paymentLink,
+          status:'waiting for confirmation'
         }, {
           where: {
             directPayId,
