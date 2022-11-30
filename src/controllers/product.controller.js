@@ -57,8 +57,34 @@ const getProductByName = async (req, res, next) => {
   }
 }
 
+const updateProduct = async (req, res, next) => {
+  const { productId } = req.params;
+
+  try {
+    const result = await Product.update({
+      ...req.body,
+      updatedAt: new Date().toISOString(),
+    }, {
+      where: {
+        productId,
+      }
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'one product updated',
+      results: {
+        affectedRows: result[0],
+      },
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getProducts,
   createProduct,
   getProductByName,
+  updateProduct,
 }

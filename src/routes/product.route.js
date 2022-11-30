@@ -9,4 +9,6 @@ router.get('/search', jwtMiddleware, product.getProductByName);
 
 router.post('/', jwtMiddleware, product.createProduct);
 
+router.put('/:productId', jwtMiddleware, adminMiddleware, product.updateProduct);
+
 module.exports = router;
