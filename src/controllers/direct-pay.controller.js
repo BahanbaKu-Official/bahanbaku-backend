@@ -92,6 +92,33 @@ const getDirectPayByUser = async (req, res, next) => {
   }
 }
 
+const getDirectPayById = async (req, res, next) => {
+  const { directPayId } = req.params;
+
+  try {
+    const directPay = await DirectPay.findByPk(directPayId, {
+      include: [
+        {
+          model: db.product,
+          as: 'products'
+        },
+        {
+          model: db.recipe,
+          as: 'recipe',
+        }
+      ],
+    });
+    
+    return res.status(200).json({
+      success: true,
+      message: 'a direct payment grabbed by id',
+      results: directPay,
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 const uploadPayment = async (req, res, next) => {    
   const { userId } = req.user;
   const { directPayId } = req.params;
@@ -148,5 +175,6 @@ module.exports = {
   createDirectPay,
   getDirectPayByUser,
   uploadPayment,
-  getBahanbakuBank
+  getBahanbakuBank,
+  getDirectPayById,
 }

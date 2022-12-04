@@ -6,6 +6,7 @@ const jwtMiddleware = require('../middlewares/jwtAuth')
 
 router.get('/', jwtMiddleware, directPay.getDirectPayByUser);
 router.get('/payment-method', jwtMiddleware, directPay.getBahanbakuBank);
+router.get('/:directPayId', jwtMiddleware, directPay.getDirectPayById);
 router.post('/:recipeId', jwtMiddleware, directPay.createDirectPay);
 router.post('/submit-payment/:directPayId', jwtMiddleware, multer.single('image'), directPay.uploadPayment);
 
