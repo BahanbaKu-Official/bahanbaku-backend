@@ -112,6 +112,10 @@ const getDirectPayById = async (req, res, next) => {
         {
           model: db.recipe,
           as: 'recipe',
+        },
+        {
+          model: db.address,
+          as: 'address',
         }
       ],
     });
