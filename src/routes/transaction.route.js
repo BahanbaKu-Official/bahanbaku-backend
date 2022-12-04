@@ -11,6 +11,8 @@ router.post('/confirm', transaction.confirmTransaction);
 
 router.get('/payment-method', jwtMiddleware, transaction.getPaymentMethod);
 
+router.get('/:transactionId', jwtMiddleware, transaction.getTransactionById);
+
 router.post('/:recipeId', jwtMiddleware, transaction.createTransaction);
 
 

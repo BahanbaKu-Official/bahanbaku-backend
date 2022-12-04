@@ -145,6 +145,33 @@ const getTransactionsByUser = async (req, res, next) => {
   }
 }
 
+const getTransactionById = async (req, res, next) => {
+  const { transactionId } = req.params;
+
+  try {
+    const transaction = await Transaction.findByPk(transactionId, {
+      include: [
+        {
+          model: db.product,
+          as: 'products'
+        },
+        {
+          model: db.recipe,
+          as: 'recipe',
+        }
+      ],
+    })
+
+    return res.status(200).json({
+      success: true,
+      message: 'transaction grabbed by id',
+      results: transaction,
+    })
+  } catch (error) {
+    next(error);
+  }
+}
+
 const confirmTransaction = async (req, res, next) => {
   const {
     order_id,
@@ -195,5 +222,6 @@ module.exports = {
   createTransaction,
   getTransactionsByUser,
   confirmTransaction,
-  getPaymentMethod
+  getPaymentMethod,
+  getTransactionById,
 }
