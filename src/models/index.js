@@ -128,6 +128,15 @@ direct_pay.belongsTo(recipe, {
   as: 'recipe'
 })
 
+address.hasMany(direct_pay, {
+  foreignKey: 'addressId',
+  as: 'address'
+})
+direct_pay.belongsTo(address, {
+  foreignKey: 'addressId',
+  as: 'address'
+})
+
 recipe.hasMany(step, {
   foreignKey: 'recipeId',
   as: 'steps',
@@ -159,11 +168,11 @@ transaction.belongsTo(refund, {
 
 step.belongsToMany(ingredient, {
   through: step_ingredients,
-  foreignKey: 'ingredientId',
+  foreignKey: 'stepId',
 });
 ingredient.belongsToMany(step, {
   through: step_ingredients,
-  foreignKey: 'stepId',  
+  foreignKey: 'ingredientId',  
 });
 
 user.hasOne(address,{

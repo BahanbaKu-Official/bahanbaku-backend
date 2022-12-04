@@ -2,6 +2,7 @@ const db = require('../models');
 const DirectPay = db.direct_pay;
 const Product = db.product;
 const User = db.user;
+const Address = db.address;
 const cloudStorage = require('../config/cloudstorage.config');
 const nanoid = require('../config/nanoid.config');
 const directPayBank = require('../config/direct-pay.config');
@@ -78,9 +79,15 @@ const getDirectPayByUser = async (req, res, next) => {
         {
           model: db.recipe,
           as: 'recipe',
-        }
+        },
+        {
+          model: db.address,
+          as: 'address',          
+        },        
       ],
     });
+
+    const address = await Address.findByPk(directPay['addressId'])
     
     return res.status(200).json({
       success: true,
